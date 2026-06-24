@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="960" viewBox="0 0 1440 960">
+  <rect width="1440" height="960" fill="#eef2f7"/>
+  <rect x="0" y="0" width="280" height="960" fill="#ffffff"/>
+  <text x="32" y="52" font-family="Arial" font-size="16" font-weight="700" fill="#2563eb">AI UX ANALYZER</text>
+  <text x="32" y="92" font-family="Arial" font-size="28" font-weight="700" fill="#111827">Feedback Intelligence</text>
+  <rect x="24" y="148" width="232" height="48" rx="8" fill="#2563eb"/>
+  <text x="64" y="179" font-family="Arial" font-size="15" font-weight="700" fill="#ffffff">Dashboard</text>
+  <rect x="320" y="32" width="1072" height="80" rx="8" fill="#ffffff"/>
+  <text x="344" y="66" font-family="Arial" font-size="13" font-weight="700" fill="#64748b">MAJOR PROJECT</text>
+  <text x="344" y="92" font-family="Arial" font-size="22" font-weight="700" fill="#111827">AI-Powered UX Feedback Analyzer</text>
+  <text x="320" y="158" font-family="Arial" font-size="30" font-weight="700" fill="#111827">Dashboard</text>
+  <text x="320" y="184" font-family="Arial" font-size="15" fill="#64748b">Sentiment, issue categories, trends, and UX heatmap.</text>
+  <g>
+    <rect x="320" y="220" width="244" height="124" rx="8" fill="#ffffff"/>
+    <text x="344" y="260" font-family="Arial" font-size="15" fill="#64748b">Total Feedback</text>
+    <text x="344" y="307" font-family="Arial" font-size="38" font-weight="700" fill="#111827">128</text>
+    <rect x="596" y="220" width="244" height="124" rx="8" fill="#ffffff"/>
+    <text x="620" y="260" font-family="Arial" font-size="15" fill="#64748b">Positive %</text>
+    <text x="620" y="307" font-family="Arial" font-size="38" font-weight="700" fill="#111827">42%</text>
+    <rect x="872" y="220" width="244" height="124" rx="8" fill="#ffffff"/>
+    <text x="896" y="260" font-family="Arial" font-size="15" fill="#64748b">Negative %</text>
+    <text x="896" y="307" font-family="Arial" font-size="38" font-weight="700" fill="#111827">38%</text>
+    <rect x="1148" y="220" width="244" height="124" rx="8" fill="#ffffff"/>
+    <text x="1172" y="260" font-family="Arial" font-size="15" fill="#64748b">Neutral %</text>
+    <text x="1172" y="307" font-family="Arial" font-size="38" font-weight="700" fill="#111827">20%</text>
+  </g>
+  <rect x="320" y="376" width="520" height="300" rx="8" fill="#ffffff"/>
+  <text x="344" y="416" font-family="Arial" font-size="18" font-weight="700" fill="#111827">Sentiment Distribution</text>
+  <circle cx="580" cy="535" r="92" fill="#10b981"/>
+  <path d="M580 535 L580 443 A92 92 0 0 1 667 565 Z" fill="#f43f5e"/>
+  <path d="M580 535 L667 565 A92 92 0 0 1 520 612 Z" fill="#f59e0b"/>
+  <rect x="872" y="376" width="520" height="300" rx="8" fill="#ffffff"/>
+  <text x="896" y="416" font-family="Arial" font-size="18" font-weight="700" fill="#111827">UX Issue Categories</text>
+  <rect x="930" y="580" width="44" height="52" rx="5" fill="#2563eb"/>
+  <rect x="1004" y="520" width="44" height="112" rx="5" fill="#2563eb"/>
+  <rect x="1078" y="468" width="44" height="164" rx="5" fill="#2563eb"/>
+  <rect x="1152" y="548" width="44" height="84" rx="5" fill="#2563eb"/>
+  <rect x="1226" y="492" width="44" height="140" rx="5" fill="#2563eb"/>
+  <rect x="1300" y="555" width="44" height="77" rx="5" fill="#2563eb"/>
+  <rect x="320" y="708" width="650" height="210" rx="8" fill="#ffffff"/>
+  <text x="344" y="748" font-family="Arial" font-size="18" font-weight="700" fill="#111827">Feedback Trend</text>
+  <polyline points="360,865 460,820 560,842 660,790 760,812 900,760" fill="none" stroke="#10b981" stroke-width="5"/>
+  <polyline points="360,835 460,858 560,810 660,825 760,770 900,800" fill="none" stroke="#f43f5e" stroke-width="5"/>
+  <rect x="1002" y="708" width="390" height="210" rx="8" fill="#ffffff"/>
+  <text x="1026" y="748" font-family="Arial" font-size="18" font-weight="700" fill="#111827">UX Problem Heatmap</text>
+  <rect x="1030" y="770" width="338" height="116" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <circle cx="1120" cy="820" r="50" fill="#f97316" opacity="0.45"/>
+  <circle cx="1220" cy="805" r="42" fill="#ef4444" opacity="0.42"/>
+  <circle cx="1300" cy="845" r="38" fill="#facc15" opacity="0.38"/>
+</svg>
