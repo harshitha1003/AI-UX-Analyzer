@@ -192,7 +192,7 @@ def export_csv():
             conn.execute(
                 """
                 SELECT feedback.id, feedback.source, feedback.text, sentiment_results.sentiment,
-                       sentiment_results.confidence, GROUP_CONCAT(ux_issues.category, ', ') AS issues
+                    sentiment_results.confidence, GROUP_CONCAT(ux_issues.category, ', ') AS issues
                 FROM feedback
                 LEFT JOIN sentiment_results ON sentiment_results.feedback_id = feedback.id
                 LEFT JOIN ux_issues ON ux_issues.feedback_id = feedback.id
@@ -214,3 +214,24 @@ def health():
         conn.execute("SELECT 1")
         feedback_count = conn.execute("SELECT COUNT(*) AS count FROM feedback").fetchone()["count"]
     return jsonify({"status": "ok", "database": "ok", "feedback_count": feedback_count, "db_path": DATABASE_PATH})
+
+
+@api.delete("/dashboard/clear")
+def clear_dashboard():
+    with get_db() as conn:
+        conn.execute("DELETE FROM recommendations")
+        conn.execute("DELETE FROM ux_issues")
+        conn.execute("DELETE FROM sentiment_results")
+        conn.execute("DELETE FROM feedback")
+        conn.execute("DELETE FROM user_activity")
+
+        # Optional: Reset auto-increment IDs
+        conn.execute("DELETE FROM sqlite_sequence WHERE name='feedback'")
+        conn.execute("DELETE FROM sqlite_sequence WHERE name='sentiment_results'")
+        conn.execute("DELETE FROM sqlite_sequence WHERE name='ux_issues'")
+        conn.execute("DELETE FROM sqlite_sequence WHERE name='recommendations'")
+        conn.execute("DELETE FROM sqlite_sequence WHERE name='user_activity'")
+
+    return jsonify({
+        "message": "Dashboard data cleared successfully."
+    })

@@ -62,3 +62,6 @@ export const getRecommendations = async () => {
   }
 };
 export const exportResultsUrl = `${API_BASE_URL}/export`;
+
+export const clearDashboard = () =>
+  api.delete("/dashboard/clear").then((res) => res.data);
