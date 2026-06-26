@@ -66,6 +66,48 @@ python -m spacy download en_core_web_sm
 
 If the Hugging Face model is unavailable, the backend automatically uses the included lexical sentiment fallback so the app remains demo-ready.
 
+## Deployment Notes
+
+### Render backend
+
+Use the `backend` directory as the service root.
+
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn app:app`
+- Health check path: `/health`
+- `AI_UX_USE_TRANSFORMER_SENTIMENT=false`
+
+SQLite works out of the box, but Render's normal filesystem is ephemeral. For persistent data, attach a Render disk and set:
+
+```bash
+AI_UX_DB_PATH=/var/data/ai_ux_analyzer.db
+```
+
+The backend also serves every API route under both `/` and `/api`, so these are equivalent:
+
+```text
+https://your-render-service.onrender.com/analyze
+https://your-render-service.onrender.com/api/analyze
+```
+
+### Vercel frontend
+
+Deploy the frontend only. The root `vercel.json` builds `frontend/dist` and rewrites app routes back to `index.html`.
+
+Set this environment variable in Vercel:
+
+```bash
+VITE_API_URL=https://your-render-service.onrender.com
+```
+
+If `VITE_API_URL` is not set, production builds use `/api` as a fallback for same-domain proxy deployments. Local development still uses `http://localhost:5000`.
+
+This repository includes `frontend/.env.production` pointing to:
+
+```bash
+VITE_API_URL=https://ai-ux-backend.onrender.com
+```
+
 ## Frontend Setup
 
 ```bash

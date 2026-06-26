@@ -1,4 +1,6 @@
 import math
+import os
+import re
 
 _classifier = None
 
@@ -17,6 +19,9 @@ def _load_classifier():
     global _classifier
     if _classifier is not None:
         return _classifier
+    if os.environ.get("AI_UX_USE_TRANSFORMER_SENTIMENT", "").lower() not in {"1", "true", "yes"}:
+        _classifier = False
+        return _classifier
     try:
         from transformers import pipeline
 
@@ -30,7 +35,7 @@ def _load_classifier():
 
 
 def _fallback_sentiment(text):
-    words = set((text or "").lower().split())
+    words = set(re.findall(r"[a-z']+", (text or "").lower()))
     positive = len(words & POSITIVE_TERMS)
     negative = len(words & NEGATIVE_TERMS)
     if positive == negative:
@@ -43,10 +48,13 @@ def _fallback_sentiment(text):
 
 def analyze_sentiment(text):
     classifier = _load_classifier()
-    if classifier:
+    if not classifier:
+        return _fallback_sentiment(text)
+
+    try:
         result = classifier(text[:512])[0]
-        label = result["label"].title()
-        if label not in {"Positive", "Negative", "Neutral"}:
-            label = "Positive" if "POS" in result["label"].upper() else "Negative"
-        return {"sentiment": label, "confidence": round(float(result["score"]), 2)}
-    return _fallback_sentiment(text)
+        label = result.get("label", "").upper()
+        sentiment = "Positive" if label == "POSITIVE" else "Negative" if label == "NEGATIVE" else "Neutral"
+        return {"sentiment": sentiment, "confidence": round(float(result.get("score", 0.0)), 2)}
+    except Exception:
+        return _fallback_sentiment(text)

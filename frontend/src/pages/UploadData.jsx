@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Download, UploadCloud } from "lucide-react";
 import LoadingButton from "../components/LoadingButton.jsx";
-import { exportResultsUrl, uploadFeedbackCsv } from "../services/api.js";
+import { exportResultsUrl, getApiErrorMessage, uploadFeedbackCsv } from "../services/api.js";
 
 export default function UploadData() {
   const [file, setFile] = useState(null);
@@ -19,7 +19,7 @@ export default function UploadData() {
       const data = await uploadFeedbackCsv(file);
       setMessage(`Uploaded and analyzed ${data.count} feedback rows.`);
     } catch (err) {
-      setError(err.response?.data?.error || "Unable to upload CSV.");
+      setError(getApiErrorMessage(err, "Unable to upload CSV."));
     } finally {
       setLoading(false);
     }

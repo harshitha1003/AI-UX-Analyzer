@@ -10,9 +10,12 @@ DATABASE_PATH = os.environ.get(
 
 @contextmanager
 def get_db():
-    os.makedirs(os.path.dirname(DATABASE_PATH), exist_ok=True)
-    conn = sqlite3.connect(DATABASE_PATH)
+    database_dir = os.path.dirname(DATABASE_PATH)
+    if database_dir:
+        os.makedirs(database_dir, exist_ok=True)
+    conn = sqlite3.connect(DATABASE_PATH, timeout=30)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
     try:
         yield conn
         conn.commit()

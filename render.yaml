@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: ai-ux-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /health
+    envVars:
+      - key: AI_UX_USE_TRANSFORMER_SENTIMENT
+        value: "false"

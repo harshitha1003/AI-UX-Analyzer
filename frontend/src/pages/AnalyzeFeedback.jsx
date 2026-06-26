@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, CheckCircle2, Lightbulb } from "lucide-react";
 import LoadingButton from "../components/LoadingButton.jsx";
-import { analyzeFeedback } from "../services/api.js";
+import { analyzeFeedback, getApiErrorMessage } from "../services/api.js";
 
 export default function AnalyzeFeedback() {
   const [text, setText] = useState("The app takes too long to load and the navigation is confusing.");
@@ -17,7 +17,7 @@ export default function AnalyzeFeedback() {
       const data = await analyzeFeedback(text);
       setResult(data);
     } catch (err) {
-      setError(err.response?.data?.error || "Unable to analyze feedback.");
+      setError(getApiErrorMessage(err, "Unable to analyze feedback."));
     } finally {
       setLoading(false);
     }

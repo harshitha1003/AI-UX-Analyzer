@@ -4,7 +4,7 @@ from collections import Counter, defaultdict
 
 from flask import Blueprint, jsonify, request, Response
 
-from database.db import get_db, row_to_dict, rows_to_dicts
+from database.db import DATABASE_PATH, get_db, row_to_dict, rows_to_dicts
 from services.preprocessing import preprocess_text
 from services.sentiment import analyze_sentiment
 from services.ux_issue_detector import detect_ux_issues
@@ -23,31 +23,44 @@ def persist_analysis(text, source="manual"):
     if not text or not text.strip():
         raise ValueError("Feedback text is required.")
 
+    print("STEP 1: Starting preprocessing", flush=True)
     processed = preprocess_text(text)
+
+    print("STEP 2: Starting sentiment", flush=True)
     sentiment = analyze_sentiment(text)
+
+    print("STEP 3: Detecting issues", flush=True)
     issues = detect_ux_issues(text, processed["processed_text"])
+
+    print("STEP 4: Generating recommendations", flush=True)
     recommendations = generate_recommendations(text, issues, sentiment)
 
+    print("STEP 5: Writing to database", flush=True)
     with get_db() as conn:
         cursor = conn.execute(
             "INSERT INTO feedback (source, text, cleaned_text) VALUES (?, ?, ?)",
             (source, text.strip(), processed["cleaned_text"]),
         )
         feedback_id = cursor.lastrowid
+
         conn.execute(
             "INSERT INTO sentiment_results (feedback_id, sentiment, confidence) VALUES (?, ?, ?)",
             (feedback_id, sentiment["sentiment"], sentiment["confidence"]),
         )
+
         for issue in issues:
             conn.execute(
                 "INSERT INTO ux_issues (feedback_id, category, score, evidence) VALUES (?, ?, ?, ?)",
                 (feedback_id, issue["category"], issue["score"], issue["evidence"]),
             )
+
         for rec in recommendations:
             conn.execute(
                 "INSERT INTO recommendations (feedback_id, category, recommendation, priority) VALUES (?, ?, ?, ?)",
                 (feedback_id, rec["category"], rec["recommendation"], rec["priority"]),
             )
+
+    print("STEP 6: Done", flush=True)
 
     return {
         "feedback_id": feedback_id,
@@ -94,6 +107,7 @@ def upload():
 @api.get("/dashboard")
 def dashboard():
     with get_db() as conn:
+        total_feedback = conn.execute("SELECT COUNT(*) AS count FROM feedback").fetchone()["count"]
         feedback = rows_to_dicts(conn.execute("SELECT * FROM feedback ORDER BY created_at DESC LIMIT 100"))
         sentiments = rows_to_dicts(conn.execute("SELECT sentiment, confidence, created_at FROM sentiment_results"))
         issues = rows_to_dicts(conn.execute("SELECT category, score, created_at FROM ux_issues"))
@@ -108,7 +122,7 @@ def dashboard():
 
     total = len(sentiments)
     statistics = {
-        "total_feedback": len(feedback),
+        "total_feedback": total_feedback,
         "positive_percent": round((sentiment_counts["Positive"] / total) * 100, 1) if total else 0,
         "negative_percent": round((sentiment_counts["Negative"] / total) * 100, 1) if total else 0,
         "neutral_percent": round((sentiment_counts["Neutral"] / total) * 100, 1) if total else 0,
@@ -196,4 +210,7 @@ def export_csv():
 
 @api.get("/health")
 def health():
-    return jsonify({"status": "ok"})
+    with get_db() as conn:
+        conn.execute("SELECT 1")
+        feedback_count = conn.execute("SELECT COUNT(*) AS count FROM feedback").fetchone()["count"]
+    return jsonify({"status": "ok", "database": "ok", "feedback_count": feedback_count, "db_path": DATABASE_PATH})
