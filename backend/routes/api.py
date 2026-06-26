@@ -225,13 +225,15 @@ def clear_dashboard():
         conn.execute("DELETE FROM feedback")
         conn.execute("DELETE FROM user_activity")
 
-        # Optional: Reset auto-increment IDs
-        conn.execute("DELETE FROM sqlite_sequence WHERE name='feedback'")
-        conn.execute("DELETE FROM sqlite_sequence WHERE name='sentiment_results'")
-        conn.execute("DELETE FROM sqlite_sequence WHERE name='ux_issues'")
-        conn.execute("DELETE FROM sqlite_sequence WHERE name='recommendations'")
-        conn.execute("DELETE FROM sqlite_sequence WHERE name='user_activity'")
+        # Reset auto increment (ignore if sqlite_sequence doesn't exist)
+        try:
+            conn.execute("DELETE FROM sqlite_sequence")
+        except Exception:
+            pass
+
+        conn.commit()
 
     return jsonify({
-        "message": "Dashboard data cleared successfully."
-    })
+        "success": True,
+        "message": "Dashboard cleared successfully."
+    }), 200
